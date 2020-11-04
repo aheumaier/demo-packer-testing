@@ -3,9 +3,9 @@ Description="Flask demo app"
 After=network.target
 
 [Service]
-# User=<username>
-WorkingDirectory="/opt/app/"
-ExecStart="python main.py"
+Type=simple
+WorkingDirectory=/opt/app/
+ExecStart=/opt/app/main.py
 Restart=always
 
 [Install]
