@@ -1,0 +1,12 @@
+[Unit]
+Description="Flask demo app"
+After=network.target
+
+[Service]
+# User=<username>
+WorkingDirectory="/opt/app/"
+ExecStart="python main.py"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

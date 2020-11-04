@@ -1,0 +1,143 @@
+{
+    "variables": {
+        "client_id": "{{env `AZURE_CLIENT_ID`}}",
+        "client_secret": "{{env `AZURE_CLIENT_SECRET`}}",
+        "tenant_id": "{{env `AZURE_TENANT_ID`}}",
+        "subscription_id": "{{env `AZURE_SUBSCRIPTION_ID`}}",
+        "build_rg": "{{env `build_rg`}}",
+        "tags_application": "{{env `TAGS_APPLICATION`}}",
+        "tags_build_id": "{{env `TAGS_BUILD_ID`}}",
+        "tags_creator": "{{env `TAGS_CREATOR`}}",
+        "tags_branch": "{{env `TAGS_BRANCH`}}"
+    },
+    "builders": [
+        {
+            "name": "docker-ubuntu",
+            "type": "docker",
+            "image": "ubuntu:18.04",
+            "commit": true,
+            "changes": [
+                "WORKDIR /app",
+                "EXPOSE 5000",
+                "ENTRYPOINT [\"python\"]",
+                "CMD [\"main.py\"]"
+            ]
+        },
+        {
+            "name": "azure-ubuntu",
+            "type": "azure-arm",
+            "client_id": "{{user `client_id`}}",
+            "client_secret": "{{user `client_secret`}}",
+            "tenant_id": "{{user `tenant_id`}}",
+            "subscription_id": "{{user `subscription_id`}}",
+            "managed_image_resource_group_name": "{{user `build_rg`}}",
+            "managed_image_name": "packer-demo-ubuntu-{{isotime \"20060102150405\"}}",
+            "temp_resource_group_name": "packer-build-rg-{{isotime \"20060102150405\"}}",
+            "location": "westeurope",
+            "os_type": "Linux",
+            "image_publisher": "Canonical",
+            "image_offer": "UbuntuServer",
+            "image_sku": "18.04-LTS",
+            "image_version": "18.04.202009220",
+            "azure_tags": {
+                "Application": "{{user `tags_application`}}",
+                "BuildID": "{{user `tags_build_id`}}",
+                "Creator": "{{user `tags_creator`}}",
+                "Branch": "{{user `tags_branch`}}"
+            },
+            "vm_size": "Standard_D2_v2",
+            "async_resourcegroup_delete": "true"
+        },
+        {
+            "name": "azure-windows",
+            "type": "azure-arm",
+            "client_id": "{{user `client_id`}}",
+            "client_secret": "{{user `client_secret`}}",
+            "tenant_id": "{{user `tenant_id`}}",
+            "subscription_id": "{{user `subscription_id`}}",
+            "managed_image_resource_group_name": "{{user `build_rg`}}",
+            "managed_image_name": "packer-demo-ubuntu-{{isotime \"20060102150405\"}}",
+            "temp_resource_group_name": "packer-build-rg-{{isotime \"2006010215040505\"}}",
+            "location": "westeurope",
+            "os_type": "Windows",
+            "image_publisher": "Canonical",
+            "image_offer": "UbuntuServer",
+            "image_sku": "18.04-LTS",
+            "image_version": "18.04.202009220",
+            "azure_tags": {
+                "Application": "{{user `tags_application`}}",
+                "BuildID": "{{user `tags_build_id`}}",
+                "Creator": "{{user `tags_creator`}}",
+                "Branch": "{{user `tags_branch`}}"
+            },
+            "vm_size": "Standard_D2_v2",
+            "async_resourcegroup_delete": "true"
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "./app/",
+            "destination": "/tmp/"
+        },
+        {
+            "type": "shell",
+            "only": [
+                "azure-ubuntu",
+                "docker-ubuntu"
+            ],
+            "environment_vars": [],
+            "script": "setup.sh"
+        },
+        {
+            "type": "shell-local",
+            "only_on": [
+                "linux"
+            ],
+            "only": [
+                "azure-ubuntu"
+            ],
+            "environment_vars": [
+                "key={{build `SSHPrivateKey`}}",
+                "pub={{build `SSHPublicKey`}}"
+            ],
+            "inline": [
+                "echo '{{ build `SSHPrivateKey`}}' > /tmp/packer_rsa",
+                "chmod 600 /tmp/packer_rsa",
+                "ssh-add /tmp/packer_rsa"
+            ]
+        },
+        {
+            "type": "shell-local",
+            "only_on": [
+                "linux"
+            ],
+            "only": [
+                "azure-ubuntu",
+                "docker-ubuntu"
+            ],
+            "environment_vars": [
+                "PACKER_USER={{build `User`}}",
+                "PACKER_HOST={{build `Host`}}",
+                "PACKER_ID={{build `ID`}}",
+                "PACKER_SSH_PORT={{build `Port`}}"
+            ],
+            "script": "teardown.sh"
+        }
+    ],
+    "post-processors": [
+        {
+            "repository": "aheumaier/docker-ubuntu",
+            "tags": [
+                "0.0.1",
+                "demo-packer-builds"
+            ],
+            "type": "docker-tag"
+        },
+        {
+            "type": "manifest",
+            "output": "packer-manifest.json",
+            "strip_path": true
+        }
+    ]
+}
