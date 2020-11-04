@@ -49,21 +49,25 @@
             "async_resourcegroup_delete": "true"
         },
         {
-            "name": "azure-windows",
+            "name": "azure-windows-server",
             "type": "azure-arm",
             "client_id": "{{user `client_id`}}",
             "client_secret": "{{user `client_secret`}}",
             "tenant_id": "{{user `tenant_id`}}",
             "subscription_id": "{{user `subscription_id`}}",
             "managed_image_resource_group_name": "{{user `build_rg`}}",
-            "managed_image_name": "packer-demo-ubuntu-{{isotime \"20060102150405\"}}",
-            "temp_resource_group_name": "packer-build-rg-{{isotime \"2006010215040505\"}}",
+            "managed_image_name": "simulation-windows-template-{{isotime \"20060102150405\"}}",
+            "temp_resource_group_name": "packer-build-rg-{{isotime \"20060102150405\"}}",
             "location": "westeurope",
             "os_type": "Windows",
-            "image_publisher": "Canonical",
-            "image_offer": "UbuntuServer",
-            "image_sku": "18.04-LTS",
-            "image_version": "18.04.202009220",
+            "image_publisher": "MicrosoftWindowsServer",
+            "image_offer": "WindowsServer",
+            "image_sku": "2019-Datacenter-with-Containers",
+            "communicator": "winrm",
+            "winrm_use_ssl": true,
+            "winrm_insecure": true,
+            "winrm_timeout": "10m",
+            "winrm_username": "packer",
             "azure_tags": {
                 "Application": "{{user `tags_application`}}",
                 "BuildID": "{{user `tags_build_id`}}",
@@ -87,7 +91,12 @@
                 "docker-ubuntu"
             ],
             "environment_vars": [],
-            "script": "setup.sh"
+            "script": "setup.sh",
+            "override": {
+                "azure-windows-server": {
+                    "script": "setup.ps"
+                }
+            }
         },
         {
             "type": "shell-local",
@@ -132,7 +141,10 @@
                 "0.0.1",
                 "demo-packer-builds"
             ],
-            "type": "docker-tag"
+            "type": "docker-tag",
+            "only": [
+                "docker-ubuntu"
+            ]
         },
         {
             "type": "manifest",

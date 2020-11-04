@@ -11,7 +11,7 @@ ssh_config() {
 run_pytest() {
     echo "INFO teardown.sh: run_pytest()"
     if [ ${PACKER_BUILDER_TYPE} == "azure-arm" ]; then
-        pytest -vv --ssh-identity-file=/tmp/packer_rsa --hosts=ssh://${user}@${host}
+        pytest -vv --ssh-identity-file=/tmp/packer_rsa --hosts=ssh://${PACKER_USER}@${PACKER_HOST}
     elif [ ${PACKER_BUILDER_TYPE} == "docker" ]; then
         pytest -vv --hosts=docker://${PACKER_ID}
     fi
