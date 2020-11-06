@@ -23,5 +23,5 @@ steps:
     azureSubscription: 'cavertes-anheumai(5305c27d-8d75-4340-9c62-4a7e98d498b4)'
     templatePath: 'template.multiplatform.json'
     command: 'build'
-    variables: build_rg=rg-shared-dev'
+    variables: 'build_rg=rg-shared-dev'
     options: '-only azure-ubuntu'

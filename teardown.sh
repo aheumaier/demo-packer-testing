@@ -13,7 +13,7 @@ run_pytest() {
     if [ ${PACKER_BUILDER_TYPE} == "azure-arm" ]; then
     echo "INFO teardown.sh: Using ${PACKER_CONNECTION_TYPE}"
         if [ $PACKER_CONNECTION_TYPE == "winrm" ]; then
-            pytest -vv --hosts=winrm://${PACKER_USER}:${PACKER_PASSWORD}@${PACKER_HOST}:5985?no_ssl=true\&no_verify_ssl=true
+            pytest -vv --hosts=winrm://${PACKER_USER}:${PACKER_PASSWORD}@${PACKER_HOST}:5985?no_verify_ssl=true
         else
             pytest -vv --ssh-identity-file=/tmp/packer_rsa --hosts=ssh://${PACKER_USER}@${PACKER_HOST}
         fi
