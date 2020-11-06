@@ -24,3 +24,4 @@ steps:
     templatePath: 'template.multiplatform.json'
     command: 'build'
     variables: build_rg=rg-shared-dev'
+    options: '-only azure-ubuntu'
