@@ -23,7 +23,7 @@ run_pytest() {
 }
 
 install_runtime() {
-    sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get install python-pip pypy-pytest
+    python -m pip install --upgrade pytest
 }
 
 run_main() {
