@@ -4,6 +4,20 @@ import pytest
 import platform
 
 
+@pytest.mark.skipif(platform.system() == "Linux")
+def test_host_system(host):
+    '''
+    Check OS properties of the host system.
+    '''
+    system_type = 'windows'
+    distribution = 'Microsoft Windows Server 2019 Datacenter'
+    release = '10.0.17763 N/A Build 17763'
+
+    assert system_type == host.system_info.type
+    assert distribution == host.system_info.distribution
+    assert release == host.system_info.release
+
+
 @pytest.mark.skipif(platform.system() == "Windows")
 def test_host_system(host):
     '''
@@ -41,6 +55,7 @@ def test_service_packages(host):
     assert host.package("python-pip").is_installed
 
 
+@pytest.mark.skipif(platform.system() == "Windows")
 def test_host_services(host):
     '''
     Check app service properties of the host system.
