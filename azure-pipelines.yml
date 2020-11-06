@@ -1,0 +1,27 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+  
+steps:
+- task: Packer@1
+  inputs:
+    connectedServiceType: 'azure'
+    azureSubscription: 'cavertes-anheumai(5305c27d-8d75-4340-9c62-4a7e98d498b4)'
+    templatePath: 'template.multiplatform.json'
+    command: 'validate'
+    variables: 'build_rg=rg-shared-dev'
+- task: Packer@1
+  inputs:
+    connectedServiceType: 'azure'
+    azureSubscription: 'cavertes-anheumai(5305c27d-8d75-4340-9c62-4a7e98d498b4)'
+    templatePath: 'template.multiplatform.json'
+    command: 'build'
+    variables: build_rg=rg-shared-dev'
+    options: '-only azure-ubuntu'
