@@ -22,8 +22,13 @@ run_pytest() {
     fi
 }
 
+install_runtime() {
+    sudo apt-get update && sudo DEBIAN_FRONTEND=noninteractive apt-get install python-pip pypy-pytest
+}
+
 run_main() {
     echo "INFO teardown.sh: main()"
+    install_runtime
     run_pytest
 }
 
