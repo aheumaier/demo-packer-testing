@@ -34,8 +34,12 @@ def test_host_system_linux(host):
 
 @pytest.mark.skipif(os.environ['PACKER_CONNECTION_TYPE'] == "winrm", reason="Skipping test_app_installed on Windows")
 def test_app_installed(host):
-    assert host.file("/opt/app/requirements.txt").exists
-    assert host.file("/opt/app/main.py").exists
+    if os.environ['PACKER_CONNECTION_TYPE'] == "winrm":
+        assert host.file("C:\\Users\\packer\\AppData\\Local\\Temp\\app\\requirements.txt").exists
+        assert host.file("C:\Users\\packer\\AppData\\Local\\Temp\\app\\main.py").exists
+    else:
+        assert host.file("/opt/app/requirements.txt").exists
+        assert host.file("/opt/app/main.py").exists
 
 
 def test_service_packages(host):
