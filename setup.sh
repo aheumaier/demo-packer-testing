@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -exu
+set -eu
 
 PACKAGES=(python-pip)
 

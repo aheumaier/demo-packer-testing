@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eux
+set -eu
 
 ssh_config() {
     echo "INFO teardown.sh: ssh_config()"
