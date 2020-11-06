@@ -1,5 +1,7 @@
 # Packer image testing with [testinfra](https://github.com/pytest-dev/pytest-testinfra)
 
+[![Build Status](https://aheumaier.visualstudio.com/armkit/_apis/build/status/aheumaier.demo-packer-testing?branchName=main)](https://aheumaier.visualstudio.com/armkit/_build/latest?definitionId=11&branchName=main)
+
 ## Introduction
 Since working on a packer remote host in a local manner is not always sufficient packer provides hook functions like `build` to access the random generated attributes at run time. Take a look here to read the full documentation.
 

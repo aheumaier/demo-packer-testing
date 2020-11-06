@@ -121,7 +121,6 @@
             "inline": [
                 "echo '{{ build `SSHPrivateKey`}}' > /tmp/packer_rsa",
                 "chmod 600 /tmp/packer_rsa",
-                "ssh-add /tmp/packer_rsa"
             ]
         },
         {
