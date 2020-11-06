@@ -1,11 +1,11 @@
 # more info:
 # https://testinfra.readthedocs.io/en/latest
 import pytest
-import platform
+import os
 
 
-@pytest.mark.skipif(platform.system() == "Linux")
-def test_host_system(host):
+@pytest.mark.skipif(os.environ['PACKER_CONNECTION_TYPE'] == "ssh", reason="Skipping test_host_system_windows on Linux")
+def test_host_system_windows(host):
     '''
     Check OS properties of the host system.
     '''
@@ -18,8 +18,8 @@ def test_host_system(host):
     assert release == host.system_info.release
 
 
-@pytest.mark.skipif(platform.system() == "Windows")
-def test_host_system(host):
+@pytest.mark.skipif(os.environ['PACKER_CONNECTION_TYPE'] == "winrm", reason="Skipping test_host_system_linux on Windows")
+def test_host_system_linux(host):
     '''
     Check OS properties of the host system.
     '''
@@ -32,16 +32,7 @@ def test_host_system(host):
     assert release == host.system_info.release
 
 
-@pytest.mark.skipif(platform.system() == "Linux")
-def test_host_system(host):
-    '''
-    Check OS properties of the host system.
-    '''
-    system_type = 'windows'
-    assert system_type == host.system_info.type
-
-
-@pytest.mark.skipif(platform.system() == "Windows")
+@pytest.mark.skipif(os.environ['PACKER_CONNECTION_TYPE'] == "winrm", reason="Skipping test_app_installed on Windows")
 def test_app_installed(host):
     assert host.file("/opt/app/requirements.txt").exists
     assert host.file("/opt/app/main.py").exists
@@ -55,7 +46,7 @@ def test_service_packages(host):
     assert host.package("python-pip").is_installed
 
 
-@pytest.mark.skipif(platform.system() == "Windows")
+@pytest.mark.skipif(os.environ['PACKER_CONNECTION_TYPE'] == "winrm", reason="Skipping test_host_services on Windows")
 def test_host_services(host):
     '''
     Check app service properties of the host system.

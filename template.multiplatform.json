@@ -83,16 +83,17 @@
             "type": "file",
             "source": "./app",
             "destination": "/tmp/",
-            "only":[
-                "azure-ubuntu",
-                "docker-ubuntu"
-            ]
+            "override": {
+                "azure-windows-server": {
+                    "destination": "C:\\Users\\packer\\AppData\\Local\\Temp\\"
+                }
+            }
         },
         {
             "type": "shell",
             "environment_vars": [],
             "script": "setup.sh",
-            "only":[
+            "only": [
                 "azure-ubuntu",
                 "docker-ubuntu"
             ]
@@ -101,7 +102,7 @@
             "type": "powershell",
             "environment_vars": [],
             "script": "setup.ps1",
-            "only":[
+            "only": [
                 "azure-windows-server"
             ]
         },
@@ -128,31 +129,14 @@
             "only_on": [
                 "linux"
             ],
-            "only": [
-                "azure-ubuntu",
-                "docker-ubuntu"
-            ],
             "environment_vars": [
                 "PACKER_USER={{build `User`}}",
                 "PACKER_HOST={{build `Host`}}",
                 "PACKER_ID={{build `ID`}}",
-                "PACKER_SSH_PORT={{build `Port`}}"
+                "PACKER_PASSWORD={{build `Password` }}",
+                "PACKER_CONNECTION_TYPE={{build `ConnType`}}"
             ],
             "script": "teardown.sh"
-        },
-        {
-            "type": "shell-local",
-            "tempfile_extension": ".ps1",
-            "environment_vars": [
-                "PACKER_USER={{build `User`}}",
-                "PACKER_HOST={{build `Host`}}",
-                "PACKER_PASSWORD={{ .WinRMPassword }}"
-            ],
-            "execute_command": ["powershell.exe", "{{.Vars}} {{.Script}}"],
-            "env_var_format": "$env:%s=\"%s\"; ",
-            "inline": [
-                "pytest -vv --hosts=\"winrm://${env:PACKER_USER}:${env:PACKER_PASSWORD}@${env:PACKER_HOST}:5985?no_ssl=true&no_verify_ssl=true\" "
-            ]
         }
     ],
     "post-processors": [
