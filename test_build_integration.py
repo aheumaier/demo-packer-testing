@@ -3,8 +3,11 @@
 import pytest
 import os
 
+conn = os.environ['PACKER_CONNECTION_TYPE']
 
-@pytest.mark.skipif(os.environ['PACKER_CONNECTION_TYPE'] == "ssh", reason="Skipping test_host_system_windows on Linux")
+
+@pytest.mark.skipif(conn == "ssh" or conn == "docker",
+                    reason="Skipping test_host_system_windows on Linux")
 def test_host_system_windows(host):
     '''
     Check OS properties of the host system.
@@ -18,7 +21,7 @@ def test_host_system_windows(host):
     assert release == host.system_info.release
 
 
-@pytest.mark.skipif(os.environ['PACKER_CONNECTION_TYPE'] == "winrm", reason="Skipping test_host_system_linux on Windows")
+@pytest.mark.skipif(conn == "winrm", reason="Skipping test_host_system_linux on Windows")
 def test_host_system_linux(host):
     '''
     Check OS properties of the host system.
@@ -32,11 +35,13 @@ def test_host_system_linux(host):
     assert release == host.system_info.release
 
 
-@pytest.mark.skipif(os.environ['PACKER_CONNECTION_TYPE'] == "winrm", reason="Skipping test_app_installed on Windows")
+@pytest.mark.skipif(conn == "winrm", reason="Skipping test_app_installed on Windows")
 def test_app_installed(host):
-    if os.environ['PACKER_CONNECTION_TYPE'] == "winrm":
-        assert host.file("C:\\Users\\packer\\AppData\\Local\\Temp\\app\\requirements.txt").exists
-        assert host.file("C:\Users\\packer\\AppData\\Local\\Temp\\app\\main.py").exists
+    if conn == "winrm":
+        assert host.file(
+            r"C:\Users\packer\AppData\Local\Temp\app\requirements.txt").exists
+        assert host.file(
+            r"C:\Users\packer\AppData\Local\Temp\app\main.py").exists
     else:
         assert host.file("/opt/app/requirements.txt").exists
         assert host.file("/opt/app/main.py").exists
@@ -50,7 +55,7 @@ def test_service_packages(host):
     assert host.package("python-pip").is_installed
 
 
-@pytest.mark.skipif(os.environ['PACKER_CONNECTION_TYPE'] == "winrm", reason="Skipping test_host_services on Windows")
+@pytest.mark.skipif(conn == "winrm" or conn == "docker", reason="Skipping test_host_services on Windows")
 def test_host_services(host):
     '''
     Check app service properties of the host system.

@@ -21,7 +21,6 @@ function Main {
     Write-Output "INFO: setup.ps1: Main"
     InstallChocolatey
     InstallPackages
-    ConfigureWinRM
     Write-Output "INFO: setup.ps1: Finished sucessful"
 }
 
