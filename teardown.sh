@@ -17,7 +17,7 @@ run_pytest() {
 
 install_runtime() {
     python3 -m pip install --upgrade pytest testinfra
-}
+} 
 
 run_main() {
     echo "INFO teardown.sh: main()"
