@@ -1,13 +1,6 @@
 #!/usr/bin/env bash
 set -eux
 
-# ssh_config() {
-#     echo "INFO teardown.sh: ssh_config()"
-#     grep -q '^StrictHostKeyChecking' ~/.ssh/config &&
-#         sed -i 's/^StrictHostKeyChecking.*/StrictHostKeyChecking no/' ~/.ssh/config ||
-#         echo 'StrictHostKeyChecking no' >>~/.ssh/config
-# }
-
 run_pytest() {
     echo "INFO teardown.sh: run_pytest()"
     if [ ${PACKER_BUILDER_TYPE} == "azure-arm" ]; then
@@ -23,7 +16,7 @@ run_pytest() {
 }
 
 install_runtime() {
-    python -m pip install --upgrade pytest
+    python -m pip install --upgrade pytest testinfra
 }
 
 run_main() {

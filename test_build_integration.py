@@ -3,7 +3,7 @@
 import pytest
 import os
 
-conn = os.environ['PACKER_CONNECTION_TYPE']
+conn = os.getenv('PACKER_CONNECTION_TYPE', "ssh")
 
 
 @pytest.mark.skipif(conn == "ssh" or conn == "docker",
