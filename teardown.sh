@@ -8,10 +8,10 @@ run_pytest() {
         if [ $PACKER_CONNECTION_TYPE == "winrm" ]; then
             python3 -m pytest -vv --hosts=winrm://${PACKER_USER}:${PACKER_PASSWORD}@${PACKER_HOST}:5986?no_verify_ssl=true
         else
-            pytho3 -m pytest -vv --ssh-identity-file=/tmp/packer_rsa --hosts=ssh://${PACKER_USER}@${PACKER_HOST}
+            python3 -m pytest -vv --ssh-identity-file=/tmp/packer_rsa --hosts=ssh://${PACKER_USER}@${PACKER_HOST}
         fi
     elif [ ${PACKER_BUILDER_TYPE} == "docker" ]; then
-        python -m pytest -vv --hosts=docker://${PACKER_ID}
+        python3 -m pytest -vv --hosts=docker://${PACKER_ID}
     fi
 }
 
