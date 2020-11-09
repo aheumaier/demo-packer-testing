@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
-PACKAGES=(python python-pip pypy-pytest)
+PACKAGES=(python python-pip python-pytest)
 
 prep_docker() {
     apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq "${PACKAGES[@]}"
