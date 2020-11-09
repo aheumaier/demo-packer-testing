@@ -6,9 +6,9 @@ run_pytest() {
     if [ ${PACKER_BUILDER_TYPE} == "azure-arm" ]; then
         echo "INFO teardown.sh: Using ${PACKER_CONNECTION_TYPE}"
         if [ $PACKER_CONNECTION_TYPE == "winrm" ]; then
-            python -m pytest -vv --hosts=winrm://${PACKER_USER}:${PACKER_PASSWORD}@${PACKER_HOST}:5986?no_verify_ssl=true
+            python3 -m pytest -vv --hosts=winrm://${PACKER_USER}:${PACKER_PASSWORD}@${PACKER_HOST}:5986?no_verify_ssl=true
         else
-            python -m pytest -vv --ssh-identity-file=/tmp/packer_rsa --hosts=ssh://${PACKER_USER}@${PACKER_HOST}
+            pytho3 -m pytest -vv --ssh-identity-file=/tmp/packer_rsa --hosts=ssh://${PACKER_USER}@${PACKER_HOST}
         fi
     elif [ ${PACKER_BUILDER_TYPE} == "docker" ]; then
         python -m pytest -vv --hosts=docker://${PACKER_ID}
@@ -16,7 +16,7 @@ run_pytest() {
 }
 
 install_runtime() {
-    python -m pip install --upgrade pytest testinfra
+    python3 -m pip install --upgrade pytest testinfra
 }
 
 run_main() {
