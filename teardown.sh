@@ -3,7 +3,7 @@ set -eux
 
 ssh_config() {
     echo "INFO teardown.sh: ssh_config()"
-    mkdir -p ~/.ssh/config
+    mkdir -p ~/.ssh/
     echo 'StrictHostKeyChecking no' >~/.ssh/config
 }
 
