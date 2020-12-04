@@ -23,7 +23,7 @@ run_pytest() {
 
 install_agent_runtime() {
     echo "INFO teardown.sh: install_agent_runtime()"
-    python3 -m pip install pytest-testinfra
+    python3 -m pip install pytest-testinfra pywinrm
 }
 
 run_main() {
@@ -33,4 +33,7 @@ run_main() {
     run_pytest
 }
 
+        
+
 run_main
+
