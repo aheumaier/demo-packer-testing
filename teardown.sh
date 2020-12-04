@@ -3,6 +3,7 @@ set -eux
 
 ssh_config() {
     echo "INFO teardown.sh: ssh_config()"
+    mkdir -p ~/.ssh/config
     echo 'StrictHostKeyChecking no' >~/.ssh/config
 }
 
@@ -22,8 +23,7 @@ run_pytest() {
 
 install_agent_runtime() {
     echo "INFO teardown.sh: install_agent_runtime()"
-    sudo apt-get update && sudo apt-get -y install python3 python3-pytest python3-pip
-    python3 -m pip install testinfra
+    python3 -m pip install pytest-testinfra
 }
 
 run_main() {
